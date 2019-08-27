@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.wazinsure.qsure.Constants.Constants;
-import com.wazinsure.qsure.Models.CustomerRegistrationModel;
 import com.wazinsure.qsure.R;
-import com.wazinsure.qsure.Service.CustomerService;
+import com.wazinsure.qsure.Service.PostService;
 
 
 import android.app.ProgressDialog;
 import android.os.Handler;
-import android.util.Base64;
+import android.sax.StartElementListener;
 import android.util.Log;
 
 import android.content.Intent;
@@ -26,27 +25,24 @@ import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.wazinsure.qsure.Service.ServiceBuilder.retrofit;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
+    public  String status="";
+
+
 
     Retrofit.Builder builder = new Retrofit.Builder()
                  .baseUrl(Constants.BASE_URL)
                   .addConverterFactory(GsonConverterFactory.create());
 
 
-
-
-    @BindView(R.id.username) EditText _usernameText;
-    @BindView(R.id.password) EditText _passwordText;
+    @BindView(R.id.usernamelogin) EditText _usernameText;
+    @BindView(R.id.passwordlogin) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
 
@@ -60,7 +56,13 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                login();
+                try {
+                    login();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -70,20 +72,20 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
+                startActivity(intent);
+                finish();
             }
         });
     }
 
-    public void login() {
-        Log.d(TAG, "Login");
+    public void login() throws IOException, InterruptedException {
+        Log.d(TAG, "Login trouble shoot");
+
 
         if (!validate()) {
             onLoginFailed();
             return;
         }
-
-        _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme);
@@ -94,60 +96,38 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
 
 
-        
-        
-
         // TODO: Implement authentication logic here.
-        CustomerService customerService = retrofit.create(CustomerService.class);
-        String username = _usernameText.getText().toString();
-        String password = _passwordText.getText().toString();
-
-
-        String base = username + ":" + password;
-
-        String authHeader = "Basic " + Base64.encodeToString(base.getBytes(), Base64.NO_WRAP);
-        Call<CustomerRegistrationModel> customerRegistrationModelCall = customerService.getCustomers(authHeader);
-
-        try{
-            Response<CustomerRegistrationModel> response = customerRegistrationModelCall.execute();
-
-            if (response.isSuccessful()){
-                onLoginSuccess();
-            }
-            else if(!response.isSuccessful()){
-                onLoginFailed();
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-
-
 
 
         new Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        try {
+                            userSignin();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                },1000);
+
     }
 
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_SIGNUP) {
-//            if (resultCode == RESULT_OK) {
-//
-//                // TODO: Implement successful signup logic hereString action;
-//
-//                this.finish();
-//            }
-//        }
-//    }
+
+    private void userSignin() throws IOException, InterruptedException {
+        String user_name = _usernameText.getText().toString();
+        String password = _passwordText.getText().toString();
+        PostService postService = new PostService();
+        postService.login(user_name, password);
+
+       if (status.equals("success")){
+           onLoginSuccess();
+       }
+    }
 
     @Override
     public void onBackPressed() {
@@ -156,8 +136,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
-        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -172,7 +151,6 @@ public class LoginActivity extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
