@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import butterknife.ButterKnife;
@@ -32,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    public  String status="";
+    public String status ="";
 
 
 
@@ -124,8 +126,9 @@ public class LoginActivity extends AppCompatActivity {
         PostService postService = new PostService();
         postService.login(user_name, password);
 
-       if (status.equals("success")){
+       if (status.equals("")){
            onLoginSuccess();
+           finish();
        }
     }
 

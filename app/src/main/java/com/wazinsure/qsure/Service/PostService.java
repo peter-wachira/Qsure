@@ -1,14 +1,25 @@
 package com.wazinsure.qsure.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.renderscript.Int2;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wazinsure.qsure.Constants.Constants;
 import com.wazinsure.qsure.UI.LoginActivity;
 import com.wazinsure.qsure.UI.MainActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.FileReader;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -23,7 +34,8 @@ import static android.content.ContentValues.TAG;
 public class PostService {
 
     LoginActivity loginActivity = new LoginActivity();
-    String loginStatus;
+
+    Context mContext;
 
 
     //    registering a  new user
@@ -64,6 +76,8 @@ public class PostService {
                 JSONObject responseJSON = null;
                 try {
                     responseJSON = new JSONObject(mMessage);
+                    if (response.isSuccessful()){
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -104,14 +118,21 @@ public class PostService {
             public void onResponse(Call call, Response response) throws IOException {
 
 
-                String mMessage = response.body().string();
+                String mMessage = response.body().toString();
+
                 Log.e(TAG, mMessage);
-                JSONObject responseJSON = null;
+
+
+//                JSONObject responseJSON = null;
+
                 try {
-                    responseJSON = new JSONObject(mMessage);
 
-                    responseJSON.put("status",responseJSON.getString("status"));
+                    JSONObject  responseJSON = new JSONObject(mMessage);
 
+
+                    if (response.code() == 200){
+                        Toast.makeText(mContext,"Success",Toast.LENGTH_SHORT).show();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
