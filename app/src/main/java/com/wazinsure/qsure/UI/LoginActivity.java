@@ -6,11 +6,12 @@ import android.os.Bundle;
 
 import com.wazinsure.qsure.Constants.Constants;
 import com.wazinsure.qsure.R;
-import com.wazinsure.qsure.Service.PostService;
+
 
 
 import android.app.ProgressDialog;
 import android.os.Handler;
+import android.os.Looper;
 import android.sax.StartElementListener;
 import android.util.Log;
 
@@ -27,14 +28,32 @@ import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import es.dmoral.toasty.Toasty;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+import com.wazinsure.qsure.Constants.Constants;
+import com.wazinsure.qsure.UI.LoginActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.IOException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import static android.content.ContentValues.TAG;
+
 
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
-    public String status ="";
+    
 
 
 
@@ -48,18 +67,20 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 try {
-                    login();
+                    loginInit();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -80,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void login() throws IOException, InterruptedException {
+    public void loginInit() throws IOException, InterruptedException {
         Log.d(TAG, "Login trouble shoot");
 
 
@@ -122,14 +143,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void userSignin() throws IOException, InterruptedException {
         String user_name = _usernameText.getText().toString();
-        String password = _passwordText.getText().toString();
-        PostService postService = new PostService();
-        postService.login(user_name, password);
+        String passworD = _passwordText.getText().toString();
+        login(user_name,passworD);
 
-       if (status.equals("")){
-           onLoginSuccess();
-           finish();
-       }
     }
 
     @Override
@@ -139,13 +155,31 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Toasty.success(getBaseContext(), " Login Success!", Toast.LENGTH_SHORT, true).show();
+
+            }
+        });
+
+        Intent intent = new Intent( this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                Toasty.error(getBaseContext(), "Login Failed!", Toast.LENGTH_SHORT, true).show();
+            }
+        });
         _loginButton.setEnabled(true);
     }
 
@@ -165,4 +199,76 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+    //    User login method
+    public void login(String username, String password) throws IOException {
+        MediaType MEDIA_TYPE = MediaType.parse("application/json");
+        String url = Constants.LOGIN + "/login";
+        OkHttpClient client = new OkHttpClient();
+        JSONObject postdata = new JSONObject();
+        try {
+            postdata.put("username", username);
+            postdata.put("password", password);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //creating an new post request
+        RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String mMessage = e.getMessage();
+                Log.w("failure Response", mMessage);
+                call.cancel();;
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String mMessage = response.body().string();
+
+                Log.e(TAG, mMessage);
+
+                JSONObject responseJSON = null;
+
+                try {
+
+                    responseJSON = new JSONObject(mMessage);
+                    String loginStatus = responseJSON.getString("status");
+                    String status =loginStatus;
+
+                    if (status.equals("success")){
+                      onLoginSuccess();
+                    }
+                    else if (status!="success"){
+                        onLoginFailed();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+    public static void backgroundThreadShortToast(final Context context, final String msg) {
+        if (context != null && msg != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 }

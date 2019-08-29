@@ -15,6 +15,7 @@
 
         <ImageView
             android:layout_width="91dp"
+            android:id="@+id/photo_url"
             android:layout_height="72dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
@@ -239,11 +240,12 @@
 
 
         <!-- Register Button -->
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_addcustomer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text=" Add Customer"/>

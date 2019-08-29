@@ -9,24 +9,25 @@
 
 
     <RelativeLayout
-        android:paddingBottom="16dp"
         android:id="@+id/container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="384dp"
+        android:layout_height="182dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:background="@drawable/card_bg"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+
         <TextView
-            android:id="@+id/mobile_number"
+            android:id="@+id/mobile_numberItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="-40dp"
             android:layout_marginTop="82dp"
@@ -36,27 +37,27 @@
             android:textColor="@color/content_text_color" />
 
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/locationItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="-40dp"
-            android:layout_marginTop="101dp"
+            android:layout_marginTop="98dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="Location"
             android:textColor="@color/content_text_color" />
 
         <TextView
-            android:id="@+id/email"
+            android:id="@+id/emailItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="-38dp"
             android:layout_marginTop="63dp"
@@ -66,12 +67,12 @@
             android:textColor="@color/content_text_color" />
 
         <TextView
-            android:id="@+id/Kra_pin"
+            android:id="@+id/kra_pinItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="-40dp"
             android:layout_marginTop="44dp"
@@ -81,12 +82,12 @@
             android:textColor="@color/content_text_color" />
 
         <TextView
-            android:id="@+id/dob"
+            android:id="@+id/dobItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
             android:layout_marginLeft="-40dp"
             android:layout_marginTop="25dp"
@@ -97,28 +98,28 @@
 
         <TextView
 
-            android:id="@+id/first_name"
+            android:id="@+id/first_nameItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="101dp"
+            android:layout_marginLeft="101dp"
+            android:layout_marginTop="21dp"
             android:text="Simon"
             android:textColor="@color/title_text_color"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/last_nameItem"
             android:layout_width="wrap_content"
-            android:id="@+id/last_name"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="82dp"
-            android:layout_marginLeft="82dp"
+            android:layout_marginStart="142dp"
+            android:layout_marginLeft="142dp"
             android:layout_marginTop="21dp"
             android:text="Peter"
             android:textColor="@color/title_text_color"
@@ -127,25 +128,24 @@
             android:textStyle="bold" />
 
 
-
         <TextView
-            android:id="@+id/occupation"
+            android:id="@+id/occupationItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
+            android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
-            android:layout_alignLeft="@id/first_name"
+            android:layout_alignLeft="@id/first_nameItem"
             android:layout_marginStart="0dp"
-            android:text="Occupation"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
+            android:text="Occupation"
             android:textColor="@color/content_text_color" />
 
 
         <TextView
-            android:id="@+id/id_number"
+            android:id="@+id/id_numberItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -161,14 +161,14 @@
 
     <ImageView
         android:id="@+id/photo_url"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="71dp"
+        android:layout_height="44dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toStartOf="@+id/container"
+        app:layout_constraintHorizontal_bias="0.206"
         app:layout_constraintStart_toStartOf="@+id/container"
         app:layout_constraintTop_toTopOf="@+id/container"
         app:srcCompat="@mipmap/astronutavatar" />

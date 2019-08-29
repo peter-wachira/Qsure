@@ -8,6 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -25,6 +26,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.Toast;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -80,7 +83,11 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.all_customers) {
             // Handle the camera action
-        } else if (id == R.id.my_profile) {
+        }
+        else if (id == R.id.add_customers) {
+            Intent intent = new Intent(this,AddCustomerActivity.class);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_share) {
 
@@ -111,7 +118,14 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 System.exit(0);
             }
-            Toast.makeText(MainActivity.this,"Please press Back again to exit",Toast.LENGTH_SHORT).show();
+
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toasty.info(getBaseContext(), "Please press Back again to exit", Toast.LENGTH_SHORT, true).show();
+                }
+            });
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
