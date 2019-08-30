@@ -48,20 +48,25 @@ public class DisplayCustomersActivity extends AppCompatActivity {
 
 
 
+
+
     private void jsonrequest() {
 
-        request = new JsonArrayRequest(JSON_URL, new Response.Listener<JSONArray>() {
+        request = new JsonArrayRequest(JSON_URL, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONArray response) {
-
-                JSONObject jsonObject = null;
+            public void onResponse(JSONObject response) {
 
 
-                for (int i = 0; i < response.length(); i++) {
+                try {
 
+                    JSONObject jsonObject = null;
 
-                    try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+
+                    for (int i=0; i< response.length();i++){
+
                         jsonObject = response.getJSONObject(i);
+
                         CustomerModel customerModel = new CustomerModel();
                         customerModel.setFirst_name(jsonObject.getString("first_name"));
                         customerModel.setLast_name(jsonObject.getString("last_name"));
@@ -83,14 +88,10 @@ public class DisplayCustomersActivity extends AppCompatActivity {
                         customerModel.setAgent_usercode(jsonObject.getString("agent_usercode"));
                         customerModel.setSales_chanel(jsonObject.getString("sales_channel"));
 
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
                 setuprecyclerview(lstCustomer);
 
             }
