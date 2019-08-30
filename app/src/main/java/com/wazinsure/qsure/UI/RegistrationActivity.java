@@ -120,6 +120,8 @@ public class RegistrationActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password= _passwordText.getText().toString();
 
+
+
         final ProgressDialog progressDialog = new ProgressDialog(this,
                 R.style.AppTheme);
 
@@ -133,12 +135,13 @@ public class RegistrationActivity extends AppCompatActivity {
                         // On complete call either onLoginSuccess or onLoginFailed
                         try {
                             register(fullname, id_no, mobile_no, email, resultUri, userName, password);
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         progressDialog.dismiss();
                     }
-                },1000);
+                },4000);
 
     }
 
@@ -148,7 +151,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Toasty.success(getBaseContext(), "Success!", Toast.LENGTH_SHORT, true).show();
+                Toasty.success(getBaseContext(), "Registration Successful!", Toast.LENGTH_SHORT, true).show();
 
             }
         });
@@ -213,7 +216,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     if (status.equals("success")){
                         onRegistrationSuccess();
                     }
-                    else {
+                    else if (status!="success"){
                         onRegistrationFailed();
                     }
 

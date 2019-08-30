@@ -13,12 +13,14 @@ import android.app.ProgressDialog;
 import android.os.Handler;
 import android.os.Looper;
 import android.sax.StartElementListener;
+
 import android.util.Log;
 
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import com.wazinsure.qsure.Constants.Constants;
+import com.wazinsure.qsure.Service.SaveSharedPreference;
 import com.wazinsure.qsure.UI.LoginActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,12 +50,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import static android.content.ContentValues.TAG;
-
-
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+
     
 
 
@@ -66,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.passwordlogin) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.loginForm) ScrollView login_form;
 
 
     @Override
@@ -73,6 +77,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        // Check if UserResponse is Already Logged In
+        if(SaveSharedPreference.getLoggedStatus(getApplicationContext())) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Toasty.info(getBaseContext(), " Welcome back !", Toast.LENGTH_SHORT, true).show();
+            startActivity(intent);
+        } else {
+            login_form.setVisibility(View.VISIBLE);
+        }
 
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        progressDialog.setMessage("Loggin you in...");
         progressDialog.show();
 
 
@@ -135,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         progressDialog.dismiss();
                     }
-                },1000);
+                },3000);
 
     }
 
@@ -245,7 +258,13 @@ public class LoginActivity extends AppCompatActivity {
                     String status =loginStatus;
 
                     if (status.equals("success")){
-                      onLoginSuccess();
+                        SaveSharedPreference.setLoggedIn(getApplicationContext(), true);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK |FLAG_ACTIVITY_CLEAR_TASK);
+                        onLoginSuccess();
+
+                        startActivity(intent);
+
                     }
                     else if (status!="success"){
                         onLoginFailed();

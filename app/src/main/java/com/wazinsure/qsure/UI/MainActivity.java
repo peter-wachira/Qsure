@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,6 +14,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.wazinsure.qsure.R;
+import com.wazinsure.qsure.Service.SaveSharedPreference;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -71,9 +68,25 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_logout) {
+            SaveSharedPreference.setLoggedIn(getApplicationContext(), false);
+            logout();
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+        public void logout() {
+//            SaveSharedPreference.setLoggedIn(getApplicationContext(),false);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+        }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -82,7 +95,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.all_customers) {
-            // Handle the camera action
+
+            Intent intent = new Intent(this, DisplayCustomersActivity.class);
+            startActivity(intent);
+            finish();
         }
         else if (id == R.id.add_customers) {
             Intent intent = new Intent(this,AddCustomerActivity.class);
@@ -113,8 +129,8 @@ public class MainActivity extends AppCompatActivity
             if (twice == true){
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mContext.startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
                 System.exit(0);
             }

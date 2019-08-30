@@ -48,6 +48,9 @@ public class CustomerModel {
         this.sales_chanel = sales_chanel;
     }
 
+    public CustomerModel() {
+    }
+
     public String getCustomer_id() {
         return customer_id;
     }

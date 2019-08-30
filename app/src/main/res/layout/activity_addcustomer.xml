@@ -123,11 +123,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/location"
+
+            <EditText
+                android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:hint="Location" />
+                android:hint="Location"
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!--postal Address-->
@@ -150,11 +152,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/postal_code"
+
+            <EditText
+                android:id="@+id/postal_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:hint="Postal code" />
+                android:hint="Postal code"
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -237,6 +241,34 @@
                 android:inputType="textCapWords"
                 android:hint="Agent Code" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <!--agent user code-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/agent_usercode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="Agent User Code" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--sales channel-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/sales_channel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="Sales Channel" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
         <!-- Register Button -->

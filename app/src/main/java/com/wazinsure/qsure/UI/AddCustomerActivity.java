@@ -61,6 +61,8 @@ public class AddCustomerActivity extends AppCompatActivity {
     @BindView(R.id.nok_mobileno) EditText nok_mobilenoText;
     @BindView(R.id.nok_relation) EditText nok_relationText;
     @BindView(R.id.agent_code) EditText agent_codeText;
+    @BindView(R.id.agent_usercode) EditText agent_usercodeText;
+    @BindView(R.id.sales_channel) EditText sales_channelText;
     @BindView(R.id.btn_addcustomer)
     Button btn_addCustomer;
     @BindView(R.id.photo_url)
@@ -130,28 +132,10 @@ public class AddCustomerActivity extends AppCompatActivity {
         String nok_mobileno = nok_mobilenoText.getText().toString();
         String nok_relation = nok_relationText.getText().toString();
         String agent_code = agent_codeText.getText().toString();
+        String agent_usercode = agent_usercodeText.getText().toString();
+        String sales_channel = sales_channelText.getText().toString();
 
-
-        final ProgressDialog progressDialog = new ProgressDialog(this,
-                R.style.AppTheme);
-
-
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Adding customer...");
-        progressDialog.show();
-        new Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        try {
-                            addNewCustomerRequest( first_name,  last_name, dob,  kra_pin,  occupation,  mobile_no,  email,  location, postal_address, postal_code,  town,  country,  resultUri , nok_fullname,  nok_mobileno, nok_relation,  agent_code);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        progressDialog.dismiss();
-                    }
-                },1000);
+        addNewCustomerRequest( first_name,  last_name, dob,  kra_pin,  occupation,  mobile_no,  email,  location, postal_address, postal_code,  town,  country,  resultUri , nok_fullname,  nok_mobileno, nok_relation,  agent_code,agent_usercode, sales_channel);
 
     }
 
@@ -183,16 +167,16 @@ public class AddCustomerActivity extends AppCompatActivity {
     }
 
     //    adding  a  new customer
-    public void addNewCustomerRequest(String first_name, String last_name,String dob, String kra_pin, String occupation, String mobile_no, String email, String location,String postal_address,String postal_code, String town, String country, Uri photo_url,String nok_fullname, String nok_mobileno,String nok_relation, String agent_code) throws IOException {
+    public void addNewCustomerRequest(String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, Uri photo_url, String nok_fullname, String nok_mobileno, String nok_relation,String agent_code, String agent_usercode, String sales_channel) throws IOException {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
-        String url = Constants.CUSTOMERS + "/customers";
+        String url = Constants.CUSTOMERS + "customers";
         OkHttpClient client = new OkHttpClient();
         JSONObject postdata = new JSONObject();
         try {
             postdata.put("first_name", first_name);
             postdata.put("last_name", last_name);
-            postdata.put("kra_pin", kra_pin);
             postdata.put("dob", dob);
+            postdata.put("kra_pin", kra_pin);
             postdata.put("occupation", occupation);
             postdata.put("mobile_no", mobile_no);
             postdata.put("email", email);
@@ -206,31 +190,40 @@ public class AddCustomerActivity extends AppCompatActivity {
             postdata.put("nok_mobileno", nok_mobileno);
             postdata.put("nok_relation", nok_relation);
             postdata.put("agent_code", agent_code);
+            postdata.put("agent_usercode",agent_usercode);
+            postdata.put("sales_channel", sales_channel);
 
 
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //creating a new post request
         RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
+
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 String mMessage = e.getMessage();
                 Log.w("failure Response", mMessage);
-                call.cancel();
+                call.cancel();;
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 String mMessage = response.body().string();
+
                 Log.e(TAG, mMessage);
+
                 JSONObject responseJSON = null;
+
                 try {
                     responseJSON = new JSONObject(mMessage);
 
@@ -239,7 +232,7 @@ public class AddCustomerActivity extends AppCompatActivity {
                     if (status.equals("success")){
                         onCustomerAddSuccess();
                     }
-                    else {
+                    else if (status!="success"){
                         onCustomerAddFailed();
                     }
 
@@ -249,6 +242,16 @@ public class AddCustomerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getBaseContext(),MainActivity.class);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 }
 
