@@ -151,7 +151,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                Toasty.success(getBaseContext(), "Registration Successful!", Toast.LENGTH_SHORT, true).show();
+                Toasty.success(getBaseContext(), "Registration Successful!", Toast.LENGTH_LONG, true).show();
+                Toasty.success(getBaseContext(), "Logging you in", Toast.LENGTH_SHORT, true).show();
 
             }
         });

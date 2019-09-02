@@ -42,8 +42,9 @@ import static android.content.ContentValues.TAG;
 
 public class AddCustomerActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-    Uri resultUri;
+//    Uri resultUri;
 
+    @BindView(R.id.id_no) EditText id_noText;
     @BindView(R.id.first_name) EditText firstNameText;
     @BindView(R.id.last_name) EditText lastNameText;
     @BindView(R.id.dob) EditText dobText;
@@ -106,16 +107,17 @@ public class AddCustomerActivity extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, 1);
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-            final Uri imageUri = data.getData();
-            resultUri = imageUri;
-            photo_urlText.setImageURI(resultUri);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
+//            final Uri imageUri = data.getData();
+//            resultUri = imageUri;
+//            photo_urlText.setImageURI(resultUri);
+//        }
+//    }
     private void addNewCustomer() throws IOException, InterruptedException{
+        String id_no = id_noText.getText().toString();
          String first_name = firstNameText.getText().toString();
         String last_name = lastNameText.getText().toString();
         String dob = dobText.getText().toString();
@@ -135,7 +137,28 @@ public class AddCustomerActivity extends AppCompatActivity {
         String agent_usercode = agent_usercodeText.getText().toString();
         String sales_channel = sales_channelText.getText().toString();
 
-        addNewCustomerRequest( first_name,  last_name, dob,  kra_pin,  occupation,  mobile_no,  email,  location, postal_address, postal_code,  town,  country,  resultUri , nok_fullname,  nok_mobileno, nok_relation,  agent_code,agent_usercode, sales_channel);
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(this,
+                R.style.AppTheme);
+
+
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Adding customer...");
+        progressDialog.show();
+        new Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        try {
+                            addNewCustomerRequest( id_no, first_name,  last_name, dob,  kra_pin,  occupation,  mobile_no,  email,  location, postal_address, postal_code,  town,  country , nok_fullname,  nok_mobileno, nok_relation,  agent_code,agent_usercode);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        progressDialog.dismiss();
+                    }
+                },5000);
+
 
     }
 
@@ -167,12 +190,13 @@ public class AddCustomerActivity extends AppCompatActivity {
     }
 
     //    adding  a  new customer
-    public void addNewCustomerRequest(String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, Uri photo_url, String nok_fullname, String nok_mobileno, String nok_relation,String agent_code, String agent_usercode, String sales_channel) throws IOException {
+    public void addNewCustomerRequest(String id_no, String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, String nok_fullname, String nok_mobileno, String nok_relation,String agent_code, String agent_usercode) throws IOException {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
         String url = Constants.CUSTOMERS + "customers";
         OkHttpClient client = new OkHttpClient();
         JSONObject postdata = new JSONObject();
         try {
+            postdata.put("id_no", id_no);
             postdata.put("first_name", first_name);
             postdata.put("last_name", last_name);
             postdata.put("dob", dob);
@@ -185,13 +209,13 @@ public class AddCustomerActivity extends AppCompatActivity {
             postdata.put("postal_code", postal_code);
             postdata.put("town", town);
             postdata.put("country", country);
-            postdata.put("photo_url", photo_url);
+//            postdata.put("photo_url", photo_url);
             postdata.put("nok_fullname", nok_fullname);
             postdata.put("nok_mobileno", nok_mobileno);
             postdata.put("nok_relation", nok_relation);
             postdata.put("agent_code", agent_code);
             postdata.put("agent_usercode",agent_usercode);
-            postdata.put("sales_channel", sales_channel);
+//            postdata.put("sales_channel", sales_channel);
 
 
 

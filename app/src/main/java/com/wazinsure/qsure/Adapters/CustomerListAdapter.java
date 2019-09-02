@@ -1,6 +1,7 @@
 package com.wazinsure.qsure.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,26 +17,26 @@ import com.bumptech.glide.request.RequestOptions;
 import com.wazinsure.qsure.Models.CustomerModel;
 import com.wazinsure.qsure.R;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
+import butterknife.ButterKnife;
 
-    private Context mContext;
-    private List<CustomerModel> mData;
-    RequestOptions option;
+public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.MyViewHolder>  {
+
+    private ArrayList<CustomerModel> mCustomers = new ArrayList<>();
+    Context mContext;
 
 
-    public RecyclerViewAdapter(Context mContext,List<CustomerModel> mData){
-        this.mContext = mContext;
-        this.mData = mData;
 
-        //Request options for Glide
 
-//        option = new RequestOptions().centerCrop().placeholder(R.drawable.loading_shape).error(R.drawable.loading_shape);
+    public  CustomerListAdapter(Context context,ArrayList<CustomerModel> customers){
+        mContext =context;
+        mCustomers = customers;
     }
-
 
 
     @NonNull
@@ -51,30 +52,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.first_name.setText(mData.get(position).getFirst_name());
-        holder.last_name.setText(mData.get(position).getLast_name());
-        holder.dob.setText(mData.get(position).getDob());
-        holder.kra_pin.setText(mData.get(position).getKra_pin());
-        holder.occupation.setText(mData.get(position).getOccupation());
-        holder.mobile_no.setText(mData.get(position).getMobile_no());
-        holder.email.setText(mData.get(position).getEmail());
-        holder.location.setText(mData.get(position).getLocation());
 
-        //setting up glide to retrieve images  from the internet and insert them to the image thunbnail
-        Glide.with(mContext).load(mData.get(position).getPhoto_url()).apply(option).into(holder.photo_url);
 
+
+        holder.bindCustomer(mCustomers.get(position));
+//        Glide.with(mContext).load(mCustomers.get(position).getPhoto_url()).apply(option).into(holder.photo_url);
 
     }
+
 
     @Override
     public int getItemCount() {
-       return mData.size();
+       return mCustomers.size();
     }
 
 
-    public static class  MyViewHolder extends RecyclerView.ViewHolder{
+    public class  MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
 
         TextView first_name;
@@ -96,10 +91,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
-
-
-
             first_name = itemView.findViewById(R.id.first_nameItem);
             last_name = itemView.findViewById(R.id.last_nameItem);
             dob = itemView.findViewById(R.id.dobItem);
@@ -107,7 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             occupation = itemView.findViewById(R.id.occupationItem);
             mobile_no = itemView.findViewById(R.id.mobile_numberItem);
             email = itemView.findViewById(R.id.emailItem);
-            location = itemView.findViewById(R.id.location);
+            location = itemView.findViewById(R.id.locationItem);
 //            postal_address = itemView.findViewById(R.id.);
 //            photo_url = itemView.findViewById(R.id.);
 //            nok_fullname = itemView.findViewById(R.id.);
@@ -115,7 +106,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            nok_relation = itemView.findViewById(R.id.);
 //            agent_code = itemView.findViewById(R.id.);
 
+            mContext = itemView.getContext();
+            itemView.setOnClickListener(this);
 
         }
+
+        public void bindCustomer(CustomerModel customer) {
+            first_name.setText(customer.getFirst_name());
+            last_name.setText(customer.getLast_name());
+            dob.setText(customer.getDob());
+            kra_pin.setText(customer.getKra_pin());
+            occupation.setText(customer.getOccupation());
+            mobile_no.setText(customer.getMobile_no());
+            email.setText(customer.getEmail());
+            location.setText(customer.getLocation());
+        }
+        @Override
+        public void onClick(View v) {
+            int itemPosition = getLayoutPosition();
+            Intent intent = new Intent(mContext, CustomerDetailActivity.class);
+            intent.putExtra("position", itemPosition);
+            intent.putExtra("games", Parcels.wrap(mCustomers));
+            mContext.startActivity(intent);
+        }
+
     }
 }

@@ -24,7 +24,7 @@ public class CustomerModel {
     String agent_usercode;
     String sales_chanel;
 
-    public CustomerModel(String customer_id, String id_no, String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, String photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode, String sales_chanel) {
+    public CustomerModel(String customer_id, String id_no, String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, String photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode) {
         this.customer_id = customer_id;
         this.id_no = id_no;
         this.first_name = first_name;
@@ -49,7 +49,9 @@ public class CustomerModel {
     }
 
     public CustomerModel() {
+
     }
+
 
     public String getCustomer_id() {
         return customer_id;
