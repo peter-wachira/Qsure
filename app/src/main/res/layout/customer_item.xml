@@ -1,18 +1,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingRight="10dp"
     android:id="@+id/customer_layout"
-    android:background="#000"
+    android:background="@color/cardview_light_background"
     android:layout_marginTop="8dp">
 
 
     <RelativeLayout
         android:id="@+id/container"
-        android:layout_width="384dp"
-        android:layout_height="182dp"
+        android:layout_width="387dp"
+        android:layout_height="184dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:background="@drawable/card_bg"
@@ -26,12 +26,11 @@
             android:id="@+id/mobile_numberItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_nameItem"
+            android:layout_below="@id/emailItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="-40dp"
-            android:layout_marginTop="82dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="mobile number"
@@ -41,12 +40,11 @@
             android:id="@+id/locationItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_nameItem"
+            android:layout_below="@id/mobile_numberItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="-40dp"
-            android:layout_marginTop="98dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="Location"
@@ -56,12 +54,11 @@
             android:id="@+id/emailItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_nameItem"
+            android:layout_below="@id/kra_pinItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="-38dp"
-            android:layout_marginTop="63dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="email"
@@ -71,12 +68,11 @@
             android:id="@+id/kra_pinItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_nameItem"
+            android:layout_below="@id/dobItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="-40dp"
-            android:layout_marginTop="44dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="kra pin"
@@ -86,12 +82,11 @@
             android:id="@+id/dobItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/first_nameItem"
+            android:layout_below="@id/occupationItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="-40dp"
-            android:layout_marginTop="25dp"
             android:layout_marginRight="16dp"
             android:lineSpacingExtra="8dp"
             android:text="Date of Birth"
@@ -105,9 +100,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="101dp"
-            android:layout_marginLeft="101dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginStart="110dp"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="20dp"
             android:text="Simon"
             android:textColor="@color/title_text_color"
             android:textStyle="bold" />
@@ -119,13 +114,11 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="142dp"
-            android:layout_marginLeft="142dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginStart="170dp"
+            android:layout_marginLeft="170dp"
+            android:layout_marginTop="20dp"
             android:text="Peter"
             android:textColor="@color/title_text_color"
-
-
             android:textStyle="bold" />
 
 
@@ -136,7 +129,7 @@
             android:layout_below="@id/first_nameItem"
             android:layout_alignStart="@+id/tv_title"
             android:layout_alignLeft="@id/first_nameItem"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="25dp"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="16dp"
@@ -149,28 +142,29 @@
             android:id="@+id/id_numberItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="32402763"
-            android:textColor="@color/content_text_color"
+            android:layout_alignRight="@+id/last_name"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
 
-            />
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/last_nameItem"
+            android:layout_toRightOf="@+id/last_nameItem"
+            android:text="32402763"
+            android:textColor="@color/content_text_color" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/photo_url"
-        android:layout_width="71dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/container"
-        app:layout_constraintHorizontal_bias="0.206"
-        app:layout_constraintStart_toStartOf="@+id/container"
-        app:layout_constraintTop_toTopOf="@+id/container"
-        app:srcCompat="@mipmap/astronutavatar" />
+    <!--<ImageView-->
+        <!--android:id="@+id/photo_url"-->
+        <!--android:layout_width="69dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--app:layout_constraintHorizontal_bias="0.847"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/container"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/container"-->
+        <!--app:srcCompat="@mipmap/astronutavatar" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

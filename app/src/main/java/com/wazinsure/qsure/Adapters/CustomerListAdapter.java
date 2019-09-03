@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.wazinsure.qsure.Models.CustomerModel;
 import com.wazinsure.qsure.R;
+import com.wazinsure.qsure.UI.CustomerDetailActivity;
 
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
@@ -28,6 +29,8 @@ import butterknife.ButterKnife;
 public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.MyViewHolder>  {
 
     private ArrayList<CustomerModel> mCustomers = new ArrayList<>();
+    RequestOptions option;
+
     Context mContext;
 
 
@@ -44,8 +47,10 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view;
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        view = inflater.inflate(R.layout.customer_item,parent,false);
+//        LayoutInflater inflater = LayoutInflater.from(mContext);
+//        view = inflater.inflate(R.layout.customer_item,parent,false);
+
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_item, parent, false);
 
         return  new MyViewHolder(view);
 
@@ -58,7 +63,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
 
 
         holder.bindCustomer(mCustomers.get(position));
-//        Glide.with(mContext).load(mCustomers.get(position).getPhoto_url()).apply(option).into(holder.photo_url);
+
 
     }
 
@@ -81,6 +86,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         TextView email;
         TextView location;
         TextView postal_address;
+        TextView id_no;
         TextView town;
         TextView country;
         ImageView photo_url;
@@ -98,6 +104,9 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             occupation = itemView.findViewById(R.id.occupationItem);
             mobile_no = itemView.findViewById(R.id.mobile_numberItem);
             email = itemView.findViewById(R.id.emailItem);
+            photo_url = itemView.findViewById(R.id.photo_url);
+            id_no = itemView.findViewById(R.id.id_numberItem);
+
             location = itemView.findViewById(R.id.locationItem);
 //            postal_address = itemView.findViewById(R.id.);
 //            photo_url = itemView.findViewById(R.id.);
@@ -120,13 +129,16 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             mobile_no.setText(customer.getMobile_no());
             email.setText(customer.getEmail());
             location.setText(customer.getLocation());
+            id_no.setText(customer.getId_no());
+
+
         }
         @Override
         public void onClick(View v) {
             int itemPosition = getLayoutPosition();
             Intent intent = new Intent(mContext, CustomerDetailActivity.class);
             intent.putExtra("position", itemPosition);
-            intent.putExtra("games", Parcels.wrap(mCustomers));
+            intent.putExtra("customerModel", Parcels.wrap(mCustomers));
             mContext.startActivity(intent);
         }
 

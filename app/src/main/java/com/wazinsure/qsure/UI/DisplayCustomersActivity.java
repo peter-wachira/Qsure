@@ -15,6 +15,7 @@ import java.util.List;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -31,9 +32,10 @@ import okhttp3.Response;
 
 public class DisplayCustomersActivity extends AppCompatActivity {
 
-    private ArrayList<CustomerModel> lstCustomer ;
+
     private RecyclerView recyclerView ;
     public static final String TAG = DisplayCustomersActivity.class.getSimpleName();
+    ArrayList<CustomerModel> allCustomers;
 
 
 
@@ -44,7 +46,6 @@ public class DisplayCustomersActivity extends AppCompatActivity {
 
 
 
-        lstCustomer = new ArrayList<>() ;
         recyclerView = findViewById(R.id.recyclerview);
         getAllCustomers();
     }
@@ -64,7 +65,14 @@ public class DisplayCustomersActivity extends AppCompatActivity {
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                getService.processResults(response);
+                allCustomers =  getService.processResults(response);
+                DisplayCustomersActivity.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        setuprecyclerview(allCustomers);
+                    }
+                });
             }
         });
     }
@@ -90,21 +98,22 @@ public class DisplayCustomersActivity extends AppCompatActivity {
     }
 
     public ArrayList<CustomerModel> processResults(Response response) {
-        //create empty Arraylist that will be used to store customer details from te response
-        ArrayList<CustomerModel> allCustomers = new ArrayList<>();
+        //create empty Arraylist that will be used to store customer details from the response
+        allCustomers = new ArrayList<>();
         try {
-            String jsonData = response.body().string();
 
+            String jsonData = response.body().string();
             //JSONObject
             JSONObject customersJSON = new JSONObject(jsonData);
-
             String status = customersJSON.getString("status");
+            JSONArray arrayList = customersJSON.getJSONArray("data");
             Log.v(TAG, "Response " + customersJSON.toString());
 
             if (status.equals("success")) {
-                for (int i = 0; i < customersJSON.length(); i++) {
-                    JSONObject resultJSON = customersJSON;
-//                    String customer_id = resultJSON.getString("customer_id");
+                for (int i = 0; i < arrayList.length(); i++) {
+
+                    JSONObject resultJSON = arrayList.getJSONObject(i);
+                    String customer_id = resultJSON.getString("customer_id");
                     String id_no = resultJSON.getString("id_no");
                     String first_name = resultJSON.getString("first_name");
                     String last_name = resultJSON.getString("last_name");
@@ -127,15 +136,12 @@ public class DisplayCustomersActivity extends AppCompatActivity {
                     String sales_channel = resultJSON.getString("sales_channel");
 
 
-                    CustomerModel customerModel =  new CustomerModel( id_no, first_name, last_name, dob, kra_pin, occupation, mobile_no, email,
+                    CustomerModel customerModel =  new CustomerModel( customer_id,id_no, first_name, last_name, dob, kra_pin, occupation, mobile_no, email,
                             location, postal_address, postal_code, town, country, photo_url, nok_fullname, nok_mobileno, nok_relation, agent_code, agent_usercode, sales_channel);
                     //adding customer objects to allCustomers list
                     allCustomers.add(customerModel);
 
-                    setuprecyclerview(lstCustomer);
-
                 }
-
             }else {
                 Toasty.error(getBaseContext(), "Error !", Toast.LENGTH_SHORT, true).show();
             }
@@ -150,10 +156,12 @@ public class DisplayCustomersActivity extends AppCompatActivity {
     }
 
 
-    private void setuprecyclerview(ArrayList<CustomerModel> lstCustomer) {
-        CustomerListAdapter myadapter = new CustomerListAdapter(this,lstCustomer) ;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    private void setuprecyclerview(ArrayList<CustomerModel> allCustomers) {
+        CustomerListAdapter myadapter = new CustomerListAdapter(this,allCustomers) ;
         recyclerView.setAdapter(myadapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(DisplayCustomersActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
 
     }
 

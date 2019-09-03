@@ -1,5 +1,8 @@
 package com.wazinsure.qsure.Models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class CustomerModel {
 
     String customer_id;
@@ -24,7 +27,7 @@ public class CustomerModel {
     String agent_usercode;
     String sales_chanel;
 
-    public CustomerModel(String customer_id, String id_no, String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, String photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode) {
+    public CustomerModel(String customer_id, String id_no, String first_name, String last_name, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, String photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode, String sales_channel) {
         this.customer_id = customer_id;
         this.id_no = id_no;
         this.first_name = first_name;
@@ -45,14 +48,12 @@ public class CustomerModel {
         this.nok_relation = nok_relation;
         this.agent_code = agent_code;
         this.agent_usercode = agent_usercode;
-        this.sales_chanel = sales_chanel;
+        this.sales_chanel = sales_channel;
     }
 
-    public CustomerModel() {
+    public CustomerModel(){
 
     }
-
-
     public String getCustomer_id() {
         return customer_id;
     }
