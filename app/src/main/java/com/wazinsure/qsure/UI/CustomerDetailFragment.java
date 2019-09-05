@@ -1,28 +1,43 @@
 package com.wazinsure.qsure.UI;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.wazinsure.qsure.Models.CustomerModel;
+import com.wazinsure.qsure.Models.CustomerResponse;
 import com.wazinsure.qsure.R;
+import com.wazinsure.qsure.Service.APIUtils;
+import com.wazinsure.qsure.Service.CustomerApiService;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
 
-public class CustomerDetailFragment extends Fragment {
+public class CustomerDetailFragment extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.first_nameProfile)
     TextView firstNameProfile;
@@ -52,8 +67,20 @@ public class CustomerDetailFragment extends Fragment {
     Button btn_updateProfile;
     @BindView(R.id.btn_delete)
     Button btn_deleteProfile;
+    CustomerApiService customerApiService;
 
 
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        customerModel = Parcels.unwrap(getArguments().getParcelable("customerModel"));
+
+        customerApiService = APIUtils.getCustomerApiService();
+
+
+    }
 
 //    private OnFragmentInteractionListener mListener;
     private CustomerModel customerModel;
@@ -72,12 +99,7 @@ public class CustomerDetailFragment extends Fragment {
         return customerDetailFragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        customerModel = Parcels.unwrap(getArguments().getParcelable("customerModel"));
 
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,9 +108,32 @@ public class CustomerDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_customer_detail, container, false);
         ButterKnife.bind(this, view);
 
+
+        btn_updateProfile.setOnClickListener(this);
+        btn_deleteProfile.setOnClickListener(this);
+
+
+
         firstNameProfile.setText(customerModel.getFirst_name());
         lastNameProfile.setText(customerModel.getLast_name());
-        dobProfile.setText(customerModel.getDob());
+//        dobProfile.setText(customerModel.getDob().);
+
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = fmt.parse(customerModel.getDob());
+
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+            String newdate= fmtOut.format(date);
+
+            dobProfile.setText(newdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        id_noProfile.setText(customerModel.getId_no());
 
         kra_PinProfile.setText(customerModel.getKra_pin());
 
@@ -128,31 +173,71 @@ public class CustomerDetailFragment extends Fragment {
         return view;
     }
 
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//        }
-//    }
+    @Override
+    public void onClick(View view) {
+        if (view == btn_updateProfile){
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+            CustomerUpdateFragment customerUpdateFragment = new CustomerUpdateFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragmentCustomerDetails, customerUpdateFragment);
+            fragmentTransaction.commit();
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
+        }
+        if (view == btn_deleteProfile){
+            deleteUser(Integer.parseInt(customerModel.getCustomer_id()));
+        }
+    }
+
+    private void deleteUser(int id) {
+        retrofit2.Call<CustomerResponse> call = customerApiService.delete(id);
+        call.enqueue(new Callback<CustomerResponse>() {
+            JsonObject jsonResponse = null;
+
+            @Override
+            public void onResponse(Call<CustomerResponse> call, retrofit2.Response<CustomerResponse> response) {
+
+             String status = response.body().toString();
+
+                if(response.isSuccessful()){
+                    onCustomerDeleteSuccess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CustomerResponse> call, Throwable t) {
+                Log.e("TAG", t.toString());
+                onCustomerDeleteFail();
+
+            }
+        });
+    }
+
+    public void onCustomerDeleteSuccess() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toasty.success(getContext(), "Customer Deleted Successfully!", Toast.LENGTH_SHORT, true).show();
+
+            }
+        });
+        Intent intent = new Intent( getContext(), DisplayCustomersActivity.class);
+        startActivity(intent);
+    }
 
 
-//    public interface OnFragmentInteractionListener {
-//
-//    }
+    public void onCustomerDeleteFail() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toasty.error(getContext(), "Customer Delete Failed!", Toast.LENGTH_SHORT, true).show();
+
+            }
+        });
+        Intent intent = new Intent( getContext(), DisplayCustomersActivity.class);
+        startActivity(intent);
+    }
 }
+

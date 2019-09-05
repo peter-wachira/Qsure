@@ -1,29 +1,39 @@
 package com.wazinsure.qsure.UI;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.wazinsure.qsure.Adapters.CustomerPagerAdapter;
+import com.wazinsure.qsure.Models.CustomerModel;
+import com.wazinsure.qsure.Models.CustomerResponse;
 import com.wazinsure.qsure.R;
+import com.wazinsure.qsure.Service.APIUtils;
+import com.wazinsure.qsure.Service.CustomerApiService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,17 +46,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+public class CustomerUpdateFragment extends Fragment implements View.OnClickListener {
 
-public class AddCustomerActivity extends AppCompatActivity {
-    private static final String TAG = "AddCustomerActivity";
-    Uri resultUri;
-
-    @BindView(R.id.id_no) EditText id_noText;
+    @BindView(R.id.id_no)
+    EditText id_noText;
     @BindView(R.id.first_name) EditText firstNameText;
     @BindView(R.id.last_name) EditText lastNameText;
     @BindView(R.id.dob) EditText dobText;
     @BindView(R.id.kra_pin)
-    EditText kra_Pin;
+    EditText kra_PinText;
     @BindView(R.id.occupation) EditText occupationText;
     @BindView(R.id.mobile_no) EditText mobile_noText;
     @BindView(R.id.email) EditText  emailText;
@@ -61,43 +69,128 @@ public class AddCustomerActivity extends AppCompatActivity {
     @BindView(R.id.agent_code) EditText agent_codeText;
     @BindView(R.id.agent_usercode) EditText agent_usercodeText;
     @BindView(R.id.sales_channel) EditText sales_channelText;
-    @BindView(R.id.btn_addcustomer)
-    Button btn_addCustomer;
+    @BindView(R.id.btn_updateCustomer)
+    Button btn_updateText;
     @BindView(R.id.photo_url)
     ImageView photo_urlText;
-
-
-
+    String CustomerID;
+    CustomerApiService customerApiService;
+    private JSONObject updateJSON;
+    Uri resultUri;
+    private static final String TAG = "CustomerUpdateFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addcustomer);
-        ButterKnife.bind(this);
-
-
-
-        btn_addCustomer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    addNewCustomer();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-//         picking customer image from gallery
-        photo_urlText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseProfileImage();
-            }
-        });
+        customerModel = Parcels.unwrap(getArguments().getParcelable("customerModel"));
+        customerApiService = APIUtils.getCustomerApiService();
+        CustomerID = customerModel.getCustomer_id();
     }
+
+    public static CustomerUpdateFragment newInstance(CustomerModel customerModel) {
+        CustomerUpdateFragment customerUpdateFragment = new CustomerUpdateFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("customerModel", Parcels.wrap(customerModel));
+        customerUpdateFragment.setArguments(args);
+        return customerUpdateFragment;
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_customer_update, container, false);
+        ButterKnife.bind(this, view);
+        btn_updateText.setOnClickListener(this);
+        //         picking customer image from gallery
+        photo_urlText.setOnClickListener(v -> chooseProfileImage());
+
+
+
+
+        firstNameText.setText(customerModel.getFirst_name());
+        lastNameText.setText(customerModel.getLast_name());
+//        dobProfile.setText(customerModel.getDob().);
+
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = fmt.parse(customerModel.getDob());
+
+            SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+            String newdate= fmtOut.format(date);
+
+            dobText.setText(newdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        id_noText.setText(customerModel.getId_no());
+
+        kra_PinText.setText(customerModel.getKra_pin());
+
+        occupationText.setText(customerModel.getOccupation());
+
+        mobile_noText.setText(customerModel.getMobile_no());
+
+        emailText.setText(customerModel.getEmail());
+
+
+
+        locationText.setText(customerModel.getLocation());
+
+
+        postal_addressText.setText(customerModel.getPostal_address());
+
+        postal_codeText.setText(customerModel.getPostal_code());
+
+        countryText.setText(customerModel.getCountry());
+
+//        imageViewProfile.setImageResource(customerModel.getPhoto_url());
+
+        nok_fullnameText.setText(customerModel.getNok_fullname());
+
+        nok_mobilenoText.setText(customerModel.getNok_mobileno());
+
+        nok_relationText.setText(customerModel.getNok_relation());
+
+
+        agent_codeText.setText(customerModel.getAgent_code());
+
+        agent_usercodeText.setText(customerModel.getAgent_usercode());
+
+        sales_channelText.setText(customerModel.getSales_chanel());
+
+        return view;
+    }
+
+
+
+
+    private CustomerModel customerModel;
+
+    public CustomerUpdateFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == btn_updateText){
+            try {
+                updateCustomerDetails();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 
     private void chooseProfileImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -105,7 +198,7 @@ public class AddCustomerActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){
             final Uri imageUri = data.getData();
@@ -114,12 +207,13 @@ public class AddCustomerActivity extends AppCompatActivity {
         }
     }
 
-    private void addNewCustomer() throws IOException, InterruptedException{
+
+    private void updateCustomerDetails() throws IOException, InterruptedException{
         String id_no = id_noText.getText().toString();
-         String first_name = firstNameText.getText().toString();
+        String first_name = firstNameText.getText().toString();
         String last_name = lastNameText.getText().toString();
         String dob = dobText.getText().toString();
-        String kra_pin = kra_Pin.getText().toString();
+        String kra_pin = kra_PinText.getText().toString();
         String occupation = occupationText.getText().toString();
         String mobile_no = mobile_noText.getText().toString();
         String email = emailText.getText().toString();
@@ -137,61 +231,31 @@ public class AddCustomerActivity extends AppCompatActivity {
 
 
 
-        final ProgressDialog progressDialog = new ProgressDialog(this,
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),
                 R.style.AppTheme);
 
 
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Adding customer...");
+        progressDialog.setMessage("Updating customer...");
         progressDialog.show();
         new Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
                         try {
-                            addNewCustomerRequest( first_name,  last_name, id_no,  dob,  kra_pin,  occupation,  mobile_no,  email,  location,  postal_address,  postal_code,  town,  country, resultUri ,  nok_fullname,  nok_mobileno,  nok_relation,  agent_code, agent_usercode, sales_channel);
+                            updateCustomerRequest( first_name,  last_name, id_no,  dob,  kra_pin,  occupation,  mobile_no,  email,  location,  postal_address,  postal_code,  town,  country, resultUri ,  nok_fullname,  nok_mobileno,  nok_relation,  agent_code, agent_usercode, sales_channel);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         progressDialog.dismiss();
                     }
                 },4000);
-
-
-
-    }
-
-
-    public void onCustomerAddSuccess() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-            @Override
-            public void run() {
-                Toasty.success(getBaseContext(), "Customer added Successfully!", Toast.LENGTH_SHORT, true).show();
-
-            }
-        });
-        Intent intent = new Intent( this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void onCustomerAddFailed() {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-            @Override
-            public void run() {
-                Toasty.warning(getBaseContext(), "Customer add Failed", Toast.LENGTH_SHORT, true).show();
-
-            }
-        });
-        btn_addCustomer.setEnabled(true);
     }
 
     //    adding  a  new customer
-    public void addNewCustomerRequest(String first_name, String last_name, String id_no, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, Uri photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode, String sales_channel) throws IOException {
+    public void updateCustomerRequest(String first_name, String last_name, String id_no, String dob, String kra_pin, String occupation, String mobile_no, String email, String location, String postal_address, String postal_code, String town, String country, Uri photo_url, String nok_fullname, String nok_mobileno, String nok_relation, String agent_code, String agent_usercode, String sales_channel) throws IOException {
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
-        String url ="https://demo.wazinsure.com:4443/api/customers";
+        String url ="https://demo.wazinsure.com:4443/api/customers/" + CustomerID ;
         OkHttpClient client = new OkHttpClient();
         JSONObject postData = new JSONObject();
         try {
@@ -225,13 +289,13 @@ public class AddCustomerActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(MEDIA_TYPE, postData.toString());
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .put(body)
                 .header("Accept", "application/json")
                 .header("Content-Type", "application/json")
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(okhttp3.Call call, IOException e) {
                 String mMessage = e.getMessage();
                 Log.w("failure Response", mMessage);
                 call.cancel();
@@ -247,10 +311,10 @@ public class AddCustomerActivity extends AppCompatActivity {
                     String customerAddStatus = responseJSON.getString("status");
                     String status = customerAddStatus;
                     if (status.equals("success")){
-                        onCustomerAddSuccess();
+                        onCustomerUpdateSuccess();
                     }
                     else if (status!="success"){
-                        onCustomerAddFailed();
+                        onCustomerUpdateFailed();
                     }
 
 
@@ -262,21 +326,40 @@ public class AddCustomerActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getBaseContext(),MainActivity.class);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-        System.exit(0);
+    public void onCustomerUpdateSuccess() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toasty.success(getContext(), "Customer Updated Successfully!", Toast.LENGTH_SHORT, true).show();
+
+            }
+        });
     }
+
+    public void onCustomerUpdateFailed() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toasty.success(getContext(), "Customer Update Failed!", Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
-
-
-
-
-
 
 
 

@@ -84,7 +84,7 @@ public class DisplayCustomersActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient.Builder()
                 .build();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.CUSTOMERS + "customers").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.CUSTOMERS + "/customers").newBuilder();
 
         String url = urlBuilder.build().toString();
 

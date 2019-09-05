@@ -166,8 +166,8 @@ public class CustomerModel {
         this.country = country;
     }
 
-    public String getPhoto_url() {
-        return photo_url;
+    public int getPhoto_url() {
+        return Integer.parseInt(photo_url);
     }
 
     public void setPhoto_url(String photo_url) {

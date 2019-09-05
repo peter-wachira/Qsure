@@ -19,7 +19,7 @@
             android:layout_height="72dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/avatar" />
+            android:src="@mipmap/customeravatar" />
 
         <!-- Full name Label -->
         <com.google.android.material.textfield.TextInputLayout
@@ -110,7 +110,7 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_addcustomer"
+            android:id="@+id/btnRegistercustomer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"

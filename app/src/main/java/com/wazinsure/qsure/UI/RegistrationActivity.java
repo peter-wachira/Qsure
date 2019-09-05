@@ -55,7 +55,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText _usernameText;
     @BindView(R.id.password)
     EditText _passwordText;
-    @BindView(R.id.btn_addcustomer)
+    @BindView(R.id.btnRegistercustomer)
     Button _registerButton;
     @BindView(R.id.signin)
     TextView login_link;
@@ -127,7 +127,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Adding customer...");
+        progressDialog.setMessage("Registering customer...");
         progressDialog.show();
         new Handler().postDelayed(
                 new Runnable() {

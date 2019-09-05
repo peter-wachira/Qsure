@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
+    android:id="@+id/fragment_customerUpdate"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
 
@@ -30,6 +31,7 @@
             <EditText android:id="@+id/id_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="ID Number" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -44,6 +46,7 @@
             <EditText android:id="@+id/first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="First Name" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -57,6 +60,7 @@
             <EditText android:id="@+id/last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Last Name" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -72,8 +76,9 @@
             <EditText android:id="@+id/dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
-                android:hint="Date of Birth: dd/mm/yyyy" />
+                android:hint="DOB: dd/mm/yyyy" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -87,6 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="KRA Pin" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,6 +105,7 @@
             <EditText android:id="@+id/occupation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Occupation" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -112,6 +119,7 @@
             <EditText android:id="@+id/mobile_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Mobile Number" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -126,6 +134,7 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/email"
                 android:layout_width="match_parent"
+                android:background="@android:color/transparent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
@@ -143,6 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Location"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -156,6 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="Postal Address" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -172,6 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Postal code"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -187,6 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="Town" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -201,6 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="Country" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -214,6 +228,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="Nok fullname" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -226,6 +241,7 @@
             <EditText android:id="@+id/nok_mobileno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Nok Mobile Number " />
         </com.google.android.material.textfield.TextInputLayout>
@@ -240,6 +256,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
+                android:background="@android:color/transparent"
                 android:hint="Nok Relation" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -252,6 +269,7 @@
             <EditText android:id="@+id/agent_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Agent Code" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -265,6 +283,7 @@
             <EditText android:id="@+id/agent_usercode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Agent User Code" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -278,6 +297,7 @@
             <EditText android:id="@+id/sales_channel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:inputType="textCapWords"
                 android:hint="Sales Channel" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -287,16 +307,14 @@
 
         <!-- Register Button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_addcustomer"
+            android:id="@+id/btn_updateCustomer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
 
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text=" Add Customer"/>
-
-
+            android:text=" Update Customer"/>
 
     </LinearLayout>
 </ScrollView>

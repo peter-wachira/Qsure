@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.wazinsure.qsure.Models.CustomerModel;
 import com.wazinsure.qsure.UI.CustomerDetailFragment;
+import com.wazinsure.qsure.UI.CustomerUpdateFragment;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,8 @@ public class CustomerPagerAdapter  extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return CustomerDetailFragment.newInstance(customerModel.get(position));
+        return    CustomerUpdateFragment.newInstance(customerModel.get(position));
+//       return CustomerDetailFragment.newInstance(customerModel.get(position));
     }
 
     @Override

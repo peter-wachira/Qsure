@@ -21,7 +21,10 @@ import com.wazinsure.qsure.UI.CustomerDetailActivity;
 import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -123,7 +126,20 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         public void bindCustomer(CustomerModel customer) {
             first_name.setText(customer.getFirst_name());
             last_name.setText(customer.getLast_name());
-            dob.setText(customer.getDob());
+
+
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = fmt.parse(customer.getDob());
+
+                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+                String newdate= fmtOut.format(date);
+
+                dob.setText(newdate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             kra_pin.setText(customer.getKra_pin());
             occupation.setText(customer.getOccupation());
             mobile_no.setText(customer.getMobile_no());
