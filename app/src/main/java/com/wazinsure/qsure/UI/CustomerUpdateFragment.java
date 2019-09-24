@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,8 +107,7 @@ public class CustomerUpdateFragment extends Fragment implements View.OnClickList
         //         picking customer image from gallery
         photo_urlText.setOnClickListener(v -> chooseProfileImage());
 
-
-
+        container.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.fade_scale_animation));
 
         firstNameText.setText(customerModel.getFirst_name());
         lastNameText.setText(customerModel.getLast_name());
@@ -124,6 +124,7 @@ public class CustomerUpdateFragment extends Fragment implements View.OnClickList
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
 
 
 

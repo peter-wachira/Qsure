@@ -6,7 +6,9 @@ import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,13 +27,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import android.widget.Filter;
+import android.widget.Filterable;
 
-import butterknife.ButterKnife;
-
-public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.MyViewHolder>  {
+public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapter.MyViewHolder>  implements Filterable {
 
     private ArrayList<CustomerModel> mCustomers = new ArrayList<>();
+    ArrayList<CustomerModel> mDataFiltrered;
+
+    boolean  isDark = false;
+
     RequestOptions option;
 
     Context mContext;
@@ -39,10 +44,22 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
 
 
 
-    public  CustomerListAdapter(Context context,ArrayList<CustomerModel> customers){
-        mContext =context;
-        mCustomers = customers;
+    public  CustomerListAdapter(Context mContext,ArrayList<CustomerModel> mCustomers,boolean isDark){
+        this.mContext = mContext;
+        this.mCustomers = mCustomers;
+        this.isDark = isDark;
+        this.mDataFiltrered = mCustomers;
+
     }
+
+
+    public  CustomerListAdapter(Context mContext,ArrayList<CustomerModel> mCustomers){
+        this.mContext =mContext;
+        this.mCustomers = mCustomers;
+        this.isDark = isDark;
+        this.mDataFiltrered = mCustomers;
+    }
+
 
 
     @NonNull
@@ -50,31 +67,69 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view;
-//        LayoutInflater inflater = LayoutInflater.from(mContext);
-//        view = inflater.inflate(R.layout.customer_item,parent,false);
-
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_item, parent, false);
+        view = LayoutInflater.from(mContext).inflate(R.layout.customer_item, parent, false);
 
         return  new MyViewHolder(view);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder customerViewHolder, int position) {
 
-
-
-
-        holder.bindCustomer(mCustomers.get(position));
-
-
+        customerViewHolder.bindCustomer(mCustomers.get(position));
+        customerViewHolder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_transition_animation));
     }
 
 
     @Override
     public int getItemCount() {
-       return mCustomers.size();
+       return mDataFiltrered.size();
     }
+
+
+
+
+    @Override
+    public Filter getFilter() {
+        return new Filter(){
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String Key = constraint.toString();
+                if(Key.isEmpty()){
+                    mDataFiltrered = mCustomers;
+                }else{
+                    ArrayList<CustomerModel> lstFiltered = new ArrayList<>();
+                    for (CustomerModel row: mCustomers){
+                        if (row.getFirst_name().toLowerCase().contains(Key.toLowerCase())){
+                            lstFiltered.add(row);
+                        }
+                    }
+                    mDataFiltrered = lstFiltered;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mDataFiltrered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
+                mDataFiltrered = (ArrayList<CustomerModel>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     public class  MyViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener{
@@ -97,30 +152,31 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
         TextView nok_mobileno;
         TextView nok_relation;
         TextView agent_code;
+        RelativeLayout container;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             first_name = itemView.findViewById(R.id.first_nameItem);
             last_name = itemView.findViewById(R.id.last_nameItem);
-            dob = itemView.findViewById(R.id.dobItem);
-            kra_pin = itemView.findViewById(R.id.kra_pinItem);
-            occupation = itemView.findViewById(R.id.occupationItem);
-            mobile_no = itemView.findViewById(R.id.mobile_numberItem);
-            email = itemView.findViewById(R.id.emailItem);
             photo_url = itemView.findViewById(R.id.photo_url);
+            container = itemView.findViewById(R.id.container);
+            mobile_no = itemView.findViewById(R.id.mobile_numberItem);
+
             id_no = itemView.findViewById(R.id.id_numberItem);
 
             location = itemView.findViewById(R.id.locationItem);
-//            postal_address = itemView.findViewById(R.id.);
-//            photo_url = itemView.findViewById(R.id.);
-//            nok_fullname = itemView.findViewById(R.id.);
-//            nok_mobileno = itemView.findViewById(R.id.);
-//            nok_relation = itemView.findViewById(R.id.);
-//            agent_code = itemView.findViewById(R.id.);
 
+            if (isDark) {
+                setDarkTheme();
+            }
             mContext = itemView.getContext();
             itemView.setOnClickListener(this);
 
+        }
+
+
+        private void setDarkTheme (){
+            container.setBackgroundResource(R.drawable.card_bg_dark);
         }
 
         public void bindCustomer(CustomerModel customer) {
@@ -128,22 +184,22 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
             last_name.setText(customer.getLast_name());
 
 
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date date = fmt.parse(customer.getDob());
+//            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+//            try {
+//                Date date = fmt.parse(customer.getDob());
+//
+//                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
+//                String newdate= fmtOut.format(date);
+//
+//                dob.setText(newdate);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
 
-                SimpleDateFormat fmtOut = new SimpleDateFormat("dd-MM-yyyy");
-                String newdate= fmtOut.format(date);
-
-                dob.setText(newdate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            kra_pin.setText(customer.getKra_pin());
-            occupation.setText(customer.getOccupation());
+//            kra_pin.setText(customer.getKra_pin());
+//            occupation.setText(customer.getOccupation());
             mobile_no.setText(customer.getMobile_no());
-            email.setText(customer.getEmail());
+//            email.setText(customer.getEmail());
             location.setText(customer.getLocation());
             id_no.setText(customer.getId_no());
 
